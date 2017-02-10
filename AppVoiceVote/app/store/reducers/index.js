@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import transcribing from './transcribing';
+import messages from './messages';
 
 export default combineReducers({
-	transcribing,
+	messages,
 });
