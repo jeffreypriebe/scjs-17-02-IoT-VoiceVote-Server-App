@@ -3,6 +3,11 @@ import { MESSAGE_ACTIONS } from '../../actions';
 
 export default function messages (state = { messages: [] }, action) {
 	switch(action.type) {
+		case MESSAGE_ACTIONS.CONNECTED:
+			return {
+				...state,
+				connected: true
+			};
 		case MESSAGE_ACTIONS.TRANSCRIBED:
 			return {
 				...state,

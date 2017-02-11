@@ -9,6 +9,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 
 export const MESSAGE_ACTIONS = {
 	TRANSCRIBED: 'TRANSCRIBED',
+	CONNECTED: 'CONNECTED',
 };
 
 const AUDIO_PATH = `${AudioUtils.DocumentDirectoryPath}/recording.wav`;
@@ -58,8 +59,19 @@ export const socketConnect = (name) => async(dispatch) => {
 	connectingSocket.connect();
 	
 	socket = connectingSocket;
+	
+	dispatch({
+		type: MESSAGE_ACTIONS.CONNECTED,
+	});
 }
 
+export const sendMessage = message => {
+	socket.emit('message', { message });
+	return {
+		type: MESSAGE_ACTIONS.TRANSCRIBED,
+		payload: message,
+	};
+}
 
 export const initRecording = (onFinished, onProgress) => async(dispatch) => {
 	AudioRecorder.prepareRecordingAtPath(AUDIO_PATH, {
