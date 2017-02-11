@@ -9,7 +9,6 @@ console.log('socket listening on 30809');
 
 io.on('connection', socket => {
 	
-	// IoT creates a room sending the room name
 	socket.on('join', data => {
 		const { name } = data;
 		
@@ -20,7 +19,7 @@ io.on('connection', socket => {
 	});
 	
 	socket.on('message', data => {
-		console.log(`Emitting: 'message'; ${JSON.stringify(data)}`);
+		console.log(`Emitting in '${socket.room}': ${JSON.stringify(data)}`);
 		socket.broadcast.to(socket.room).emit('message', data);
 	});
 });
