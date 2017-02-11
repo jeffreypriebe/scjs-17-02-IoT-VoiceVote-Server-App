@@ -17,11 +17,6 @@ io.on('connection', socket => {
 		
 		socket.join(name);
 		socket.room = name;
-		
-		// setTimeout(function() {
-		// 	console.log('emitting');
-		// 	io.sockets.in(name).emit('message', { message: 'From server'} );
-		// }, 1000);
 	});
 	
 	socket.on('message', data => {
