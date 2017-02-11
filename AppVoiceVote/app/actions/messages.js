@@ -1,3 +1,6 @@
+window.navigator.userAgent = 'react-native';
+let io = require('socket.io-client'); //no hoisting for you! need that window.nav... (import hoists)
+
 import {
 	AudioRecorder,
 	AudioUtils
@@ -26,6 +29,37 @@ const headers = {
 	'Accept': 'application/json',
 	'Content-Type': 'application/json'
 };
+
+let socket;
+
+export const socketConnect = (name) => async(dispatch) => {
+	const connectingSocket = io('ws://localhost:30809', {
+		transports: ['websocket'],
+		jsonp: false
+	});
+
+	connectingSocket.on('connect', () => {
+		connectingSocket.emit('join', { name });
+	});
+	
+	connectingSocket.on('message', data => {
+		const { message: text } = data;
+		console.log(data);
+
+		dispatch({
+			type: MESSAGE_ACTIONS.TRANSCRIBED,
+			payload: {
+				text,
+				user: { _id: 2, name: 'IoT' },
+			}
+		});
+	});
+	
+	connectingSocket.connect();
+	
+	socket = connectingSocket;
+}
+
 
 export const initRecording = (onFinished, onProgress) => async(dispatch) => {
 	AudioRecorder.prepareRecordingAtPath(AUDIO_PATH, {
@@ -85,12 +119,7 @@ function finishRecording(filePath, dispatch) {
 				type: MESSAGE_ACTIONS.TRANSCRIBED,
 				payload: message,
 			});
-			// const messages = this.updateMessages(this.state.messages, message);
-			// this.setState({
-			// 	transcribing: false,
-			// 	transcribed: message,
-			// 	messages
-			// });
+			socket.emit('message', { message });
 		}).catch(error => {
 			console.error(error);
 		});

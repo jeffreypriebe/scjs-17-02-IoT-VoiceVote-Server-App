@@ -15,14 +15,17 @@ export default function messages (state = { messages: [] }, action) {
 
 function updateMessages(currentMessages, newMessage) {
 	let newMessages = currentMessages.slice();
-	newMessages.splice(0, 0, {
-		_id: uuid.v4(),
+	const newMessageFormatted = newMessage.user ? newMessage : {
 		text: newMessage,
-		createdAt: new Date(),
 		user: {
 			_id: 1,
 			name: 'JP',
 		}
-	});
+	};
+	newMessageFormatted._id = uuid.v4();
+	newMessageFormatted.createdAt = new Date();
+	
+	newMessages.splice(0, 0, newMessageFormatted);
+
 	return newMessages;
 }

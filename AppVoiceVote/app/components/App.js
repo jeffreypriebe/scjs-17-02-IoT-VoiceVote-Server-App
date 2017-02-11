@@ -6,14 +6,22 @@ import {
   Text,
   View,
 } from 'react-native';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Recorder } from './Recorder';
 import { GiftedChat } from 'react-native-gifted-chat';
 
+import { socketConnect } from '../actions';
+
 const ID_SELF = 1;
 
 export class AppComponent extends Component {
+  
+  componentDidMount() {
+    this.props.actions.socketConnect('test');
+  }
+  
 
 	render() {
     const { messages } = this.props.state.messages;
@@ -40,4 +48,5 @@ const styles = StyleSheet.create({
 
 export const App = connect(
 	state => ({ state }),
+  dispatch => ({ actions: bindActionCreators({ socketConnect }, dispatch) }),
 )(AppComponent);
