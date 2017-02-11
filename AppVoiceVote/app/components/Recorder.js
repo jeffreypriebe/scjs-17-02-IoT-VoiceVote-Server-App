@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   Button,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { initRecording, startRecording, stopRecording } from '../actions'
+import { initRecording, startRecording, stopRecording } from '../actions';
 
-export class Recorder extends Component {
+class RecorderComponent extends Component {
   state = {
 		currentTime: 0.0,
     recording: false,
@@ -30,8 +31,10 @@ export class Recorder extends Component {
 	}
 
 	componentDidMount() {
+		const { actions: { initRecording } } = this.props;
+
 		initRecording(
-			didSucceed => this.setState({ finished: didSucceed }),
+			finished => this.setState({ finished }),
 			data => this.setState({ currentTime: Math.floor(data.currentTime) }),
 		);
 
@@ -81,3 +84,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 });
+
+export const Recorder = connect(
+	state => ({ state }),
+	dispatch => ({ actions: bindActionCreators({ initRecording }, dispatch) }),
+)(RecorderComponent);

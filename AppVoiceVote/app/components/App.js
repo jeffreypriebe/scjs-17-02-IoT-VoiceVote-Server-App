@@ -6,34 +6,24 @@ import {
   Text,
   View,
 } from 'react-native';
-import uuid from 'uuid';
+import { connect } from 'react-redux';
 
 import { Recorder } from './Recorder';
 import { GiftedChat } from 'react-native-gifted-chat';
 
-export class App extends Component {
-  state = {
-		messages: [],
-  }
+const ID_SELF = 1;
+
+export class AppComponent extends Component {
 
 	render() {
-    const { messages } = this.state;
+    const { messages } = this.props.state.messages;
 
 		return (
       <View style={styles.container}>
 				<Recorder style={styles.recorder} />
-				<GiftedChat messages={messages} user={{ _id: 2 }} />
+				<GiftedChat messages={messages} user={{ _id: ID_SELF }} />
 			</View>
 		);
-	}
-
-	updateMessages (currentMessages, newMessage) {
-		let newMessages = currentMessages.slice();
-		newMessages.splice(0, 0, {
-			_id: uuid.v4(),
-			text: newMessage, createdAt: new Date(), user: { _id: 2, name: 'JP', avatar: 'https://facebook.github.io/react/img/logo_og.png' }
-		});
-		return newMessages;
 	}
 }
 
@@ -46,3 +36,8 @@ const styles = StyleSheet.create({
 		paddingTop: 30,
   },
 });
+
+
+export const App = connect(
+	state => ({ state }),
+)(AppComponent);

@@ -4,6 +4,10 @@ import {
 } from 'react-native-audio';
 import RNFetchBlob from 'react-native-fetch-blob';
 
+export const MESSAGE_ACTIONS = {
+	TRANSCRIBED: 'TRANSCRIBED',
+};
+
 const AUDIO_PATH = `${AudioUtils.DocumentDirectoryPath}/recording.wav`;
 
 const SPEECH_API_URL = 'https://speech.googleapis.com/v1beta1/speech:syncrecognize?key=AIzaSyCGj_tTEv9scx-5qhbCV4oK6IXiZOI24Fk';
@@ -23,7 +27,7 @@ const headers = {
 	'Content-Type': 'application/json'
 };
 
-export function initRecording(onFinished, onProgress) {
+export const initRecording = (onFinished, onProgress) => async(dispatch) => {
 	AudioRecorder.prepareRecordingAtPath(AUDIO_PATH, {
 		SampleRate: 16000,
 		Channels: 1,
@@ -36,11 +40,10 @@ export function initRecording(onFinished, onProgress) {
 		const status = data.status === "OK";
 
 		if (onFinished) onFinished(status);
-		// finishRecording(data.audioFileURL);
+		finishRecording(data.audioFileURL, dispatch);
 	}
-	if(onProgress) AudioRecorder.onProgress = onProgress;
+	if (onProgress) AudioRecorder.onProgress = onProgress;
 }
-
 
 export async function startRecording() {
 	return await AudioRecorder.startRecording();
@@ -54,10 +57,10 @@ function extractTranscription(response) {
 	if (!response || !response.results || !response.results[0] || !response.results[0].alternatives)
 		return '[UNRECOGNIZED]';
 	else
-		return response.results[0].alternatives[0];
+		return response.results[0].alternatives[0].transcript;
 }
 
-function finishRecording(filePath) {
+function finishRecording(filePath, dispatch) {
 	console.log(`Finished recording at path: ${filePath}`);
 
 	const filePathRead = filePath.replace('file://', '');
@@ -78,7 +81,10 @@ function finishRecording(filePath) {
 		.then(response => {
 			console.log(response);
 			const message = extractTranscription(response);
-			console.info('MUST DISPATCH HERE')
+			dispatch({
+				type: MESSAGE_ACTIONS.TRANSCRIBED,
+				payload: message,
+			});
 			// const messages = this.updateMessages(this.state.messages, message);
 			// this.setState({
 			// 	transcribing: false,
