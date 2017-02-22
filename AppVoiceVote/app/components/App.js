@@ -64,8 +64,11 @@ const styles = StyleSheet.create({
   },
   inputs: {
     borderColor: '#333333',
+    width: 140,
     height: 40,
     borderWidth: 1,
+    alignSelf: 'center',
+    padding: 10,
   },
 });
 
