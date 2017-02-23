@@ -1,6 +1,8 @@
 window.navigator.userAgent = 'react-native';
 let io = require('socket.io-client'); //no hoisting for you! need that window.nav... (import hoists)
 
+const SERVER = 'https://voicevote.jeffreypriebe.com';
+
 import {
 	AudioRecorder,
 	AudioUtils
@@ -34,7 +36,8 @@ const headers = {
 let socket;
 
 export const socketConnect = (name) => async(dispatch) => {
-	const connectingSocket = io('ws://localhost:30809', {
+	const connectingSocket = io(SERVER, {
+		secure: true,
 		transports: ['websocket'],
 		jsonp: false
 	});
