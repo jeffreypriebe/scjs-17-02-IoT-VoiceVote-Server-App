@@ -4,8 +4,10 @@ var express = require('express'),
 	socketio = require('socket.io'),
 	io = socketio(server);
 
-io.listen(30809);
-console.log('socket listening on 30809');
+var port = 30902;
+
+io.listen(port);
+console.log('socket listening on ' + port);
 
 io.on('connection', function(socket) {
 	
