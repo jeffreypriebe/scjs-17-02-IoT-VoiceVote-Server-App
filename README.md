@@ -8,3 +8,6 @@ This is part of the VoiceVote app which includes:
 This is the combined Server & Mobile App repo.
 Normally this would be two separate repos, but they are combined for the purposes of this setup since the focus is the Edison/IoT code.
 
+---
+
+Built to demo at [Santa Cruz JavaScript meetup Feb 2017](https://www.meetup.com/santacruzjs/events/237562789/).
